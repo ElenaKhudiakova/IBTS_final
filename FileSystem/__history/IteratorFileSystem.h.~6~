@@ -1,0 +1,23 @@
+//---------------------------------------------------------------------------
+
+#ifndef IteratorFileSystemH
+#define IteratorFileSystemH
+#include "AbstractFileSystem.h"
+#include "Utils.h"
+//---------------------------------------------------------------------------
+class IteratorFS {
+	private:
+		class AbstractFileSystem* FileSystem;
+		DWORD currentPosition;
+		char* clusterBuffer;
+	public:
+		IteratorFS(AbstractFileSystem* FileSystem);
+
+		void First();
+		void Next();
+		bool IsDone();
+		char* GetCurrent();
+
+		~IteratorFS();
+};
+#endif

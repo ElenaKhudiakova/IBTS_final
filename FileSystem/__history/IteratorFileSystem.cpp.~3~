@@ -1,0 +1,51 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "IteratorFileSystem.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+IteratorFS::IteratorFS(AbstractFileSystem* FileSystem)
+	: FileSystem(FileSystem)
+{
+	// Объявляем буфер для кластера с нужным размером
+	clusterBuffer = new char[FileSystem->GetClusterSize()];
+
+	// Начальная позиция чтения
+	currentPosition = 0;
+}
+
+IteratorFS::~~IteratorFS() {
+	// Очистка буфера при удалении итератора
+	delete[] clusterBuffer;
+}
+
+void IteratorFS::First() {
+	// Позиционируемся
+	if (!CreateFilePointer(FileHandle, 0)) {
+		return;
+	}
+
+	// Читаем кластер
+	ReadData(FileHandle, clusterBuffer, FileSystem->GetClusterSize());
+}
+
+void IteratorFS::Next() {
+	currentPosition++;
+	// Позиционируемся
+	if (!CreateFilePointer(FileHandle, FileSystem->GetClusterSize()*currentPosition)) {
+		return;
+	}
+
+	// Читаем кластер
+	ReadData(FileHandle, clusterBuffer, FileSystem->GetClusterSize());
+}
+
+bool IteratorFS::IsDone() {
+
+}
+
+char* GetCurrent() {
+	return clusterBuffer;
+}

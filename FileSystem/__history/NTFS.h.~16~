@@ -1,0 +1,28 @@
+//---------------------------------------------------------------------------
+#ifndef NTFSH
+#define NTFSH
+#include "AbstractFileSystem.h"
+//---------------------------------------------------------------------------
+#pragma pack(push, 1)
+typedef struct {
+	char Padding1[3];
+
+	char OEM[8];                           		//
+	unsigned short SectorSize;					// Размер сектора в байтах
+	unsigned char ClusterSize;                  // Кол-во секторов в одном кластере
+	char Padding2[7];
+	char DeviceType;							// Тип носителя данных
+	char Padding3[18];
+
+	unsigned long SectorsVolumeCount;  // Общее количество секторов в разделе
+//	unsigned int RightPartOfSectorsVolumeCount; // Старшее слово общего количества секторов в разделе
+
+} NTFS_BootRecord;
+#pragma pack(pop)
+
+class NTFS
+: public AbstractFileSystem {
+	public:
+		NTFS(HANDLE FileHandle);
+};
+#endif

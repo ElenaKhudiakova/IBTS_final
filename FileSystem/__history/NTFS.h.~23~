@@ -1,0 +1,38 @@
+//---------------------------------------------------------------------------
+#ifndef NTFSH
+#define NTFSH
+#include "AbstractFileSystem.h"
+#include "IteratorFileSystem.h"
+#include "Signatures.h"
+//---------------------------------------------------------------------------
+#pragma pack(push, 1)
+typedef struct {
+	char Padding1[3];
+
+	char OEM[8];                           		// Сигнатура ФС
+	unsigned short SectorSize;					// Размер сектора в байтах
+	unsigned char ClusterSize;                  // Кол-во секторов в одном кластере
+	char Padding2[7];
+	char DeviceType;							// Тип носителя данных
+	char Padding3[18];
+
+	unsigned long SectorsVolumeCount;  			// Общее количество секторов в разделе
+
+} NTFS_BootRecord;
+#pragma pack(pop)
+
+// Класс-наследник от AbstractFileSystem
+class NTFS : public AbstractFileSystem {
+	public:
+		NTFS(HANDLE FileHandle);
+		IteratorFS* GetIterator();
+};
+
+// Декоратор итератора
+class NTFSIterator : public IteratorFS {
+	public:
+		NTFSIterator(AbstractFileSystem* FileSystem);
+//		void First();
+//		void Next();
+};
+#endif
