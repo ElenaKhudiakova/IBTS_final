@@ -1,0 +1,66 @@
+//---------------------------------------------------------------------------
+#pragma hdrstop
+
+#include "AbstractFileSystem.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+AbstractFileSystemT::AbstractFileSystemT(HANDLE FileHandle)
+	: FileHandle(FileHandle)
+{
+
+}
+
+AbstractFileSystemT::~AbstractFileSystemT()
+{
+	CloseHandle(FileHandle);
+}
+
+
+bool AbstractFileSystemT::ReadCluster(char* dataBuffer, DWORD clusterNumber)
+{
+	// Позиционируемся в файле
+	LARGE_INTEGER sectorOffset;
+	// Смещение от начала кластера
+	sectorOffset.QuadPart = (LONGLONG)(clusterNumber*GetClusterSize());
+
+	// Задаём позицию
+	DWORD currentPosition = SetFilePointer(
+		FileHandle,
+		sectorOffset.LowPart,
+		&sectorOffset.HighPart,
+		FILE_BEGIN
+	);
+
+	if (currentPosition != sectorOffset.LowPart) {
+		return false;
+	}
+
+	DWORD bytesToRead = GetClusterSize();	// Сколько байтов нужно прочитать
+	DWORD bytesRead; 	    				// Сколько байтов удалось считать
+
+	// Чтение данных
+	bool readResult = ReadFile(
+		FileHandle,
+		dataBuffer,
+		bytesToRead,
+		&bytesRead,
+		NULL
+	);
+
+	return readResult && bytesRead == bytesToRead;
+}
+
+UINT64 AbstractFileSystemT::GetFileSystemSize() {
+	return fileSystemSize;
+}
+
+DWORD AbstractFileSystemT::GetClusterCount() {
+	return clusterCount;
+}
+
+DWORD AbstractFileSystemT::GetClusterSize() {
+	return clusterSize;
+}
+
+
