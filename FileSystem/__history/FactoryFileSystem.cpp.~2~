@@ -1,0 +1,21 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "FactoryFileSystem.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+AbstractFileSystem* AbstractFileSystem::CreateFileSystem(FSType Type, HANDLE FileHandle) const {
+	AbstractFileSystem* FileSystem;
+	switch (Type) {
+	case FSType::NTFS:
+		FileSystem = new NTFS_FileSystem(FileHandle);
+		break;
+	case FSType::exFAT:
+		FileSystem = new exFAT_FileSystem(FileHandle);
+		break;
+	}
+
+	return FileSystem;
+}

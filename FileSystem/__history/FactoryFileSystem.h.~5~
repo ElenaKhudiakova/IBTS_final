@@ -1,0 +1,23 @@
+//---------------------------------------------------------------------------
+
+#ifndef FactoryFileSystemH
+#define FactoryFileSystemH
+#include <vcl.h>
+#inlcude "AbstractFileSystem.h"
+#inlcude "NTFS_FileSystem.h"
+#inlcude "exFAT_FileSystem.h"
+//---------------------------------------------------------------------------
+
+// Перечисление типов файловых систем
+enum FSType {
+	NTFS=1,
+	exFAT=2
+};
+
+// Параметризированный фабричный метод создания ФС
+AbstractFileSystem* CreateFileSystem(FSType Type, HANDLE FileHandle);
+
+// Функция определения ФС
+FSType FindFileSystemType(HANDLE FileHandle);
+
+#endif
