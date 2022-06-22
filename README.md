@@ -3,7 +3,8 @@
 
 
 ## Интерфейс программы представлен ниже:
-![image](https://user-images.githubusercontent.com/87654857/175004860-35b4318c-346e-4c1c-aea7-4d4321e5a63f.png)
+![image](https://user-images.githubusercontent.com/87654857/175007034-0a9c2a50-3623-414c-b8f1-1008dc474e11.png)
+
 
 Было выделено 5 сигнатур: PNG, JPEG, GIF, PDF и FILE. 
 
