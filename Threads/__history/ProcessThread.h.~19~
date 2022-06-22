@@ -1,0 +1,34 @@
+//---------------------------------------------------------------------------
+
+#ifndef ProcessThreadH
+#define ProcessThreadH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <cstring>
+#include "Signatures.h"
+#include <vcl.h>
+#include "Main.h"
+#include "sqlite3.h"
+//---------------------------------------------------------------------------
+class ProcessThread : public TThread
+{
+private:
+	TEvent* MyEvent;
+	DWORD bufferSize;
+	TForm1* Form1;
+
+	char* copyBuffer;
+	ClusterSignature clusterSignature;
+//	DWORD clusterNumber;
+
+	bool addClusterToDB();
+    void addClustersToVST();
+protected:
+	void __fastcall Execute();
+public:
+	__fastcall ProcessThread(bool CreateSuspended, TEvent* MyEvent, DWORD bufferSize, TForm1* Form1);
+
+	char* receivedBuffer;
+};
+//---------------------------------------------------------------------------
+#endif

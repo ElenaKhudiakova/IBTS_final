@@ -1,0 +1,28 @@
+//---------------------------------------------------------------------------
+
+#ifndef ReadThreadH
+#define ReadThreadH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <vcl.h>
+#include "ProcessThread.h"
+#include "Main.h"
+#include "ustring.h"
+//---------------------------------------------------------------------------
+class ReadThread : public TThread
+{
+private:
+	class IteratorFS* Iterator;   // есть итератор
+	class ProcessThread* ProcessThreadPtr;   // есть ссылка на другой поток-процесс
+	class TForm1* Form1;
+	TEvent* MyEvent;  // есть ссылка на MyEvent для того, чтобы "общаться" с ProcessThread
+protected:
+	void __fastcall Execute();
+public:
+	__fastcall ReadThread(bool CreateSuspended, IteratorFS* Iterator, TForm1* Form1, bool useSignatureSearch);
+	void __fastcall OnStart(); // когда только запущен поток
+	void __fastcall OnProgress();  // обновление прогресса на форме ProgressBar1
+	void __fastcall OnStop();   // поток зачершается, выводится информация на форму
+};
+//---------------------------------------------------------------------------
+#endif

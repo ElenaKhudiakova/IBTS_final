@@ -1,0 +1,36 @@
+//---------------------------------------------------------------------------
+
+#ifndef ProcessThreadH
+#define ProcessThreadH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <vcl.h>
+#include <cstring>
+#include "Signatures.h"
+#include "Main.h"
+#include "sqlite3.h"
+//---------------------------------------------------------------------------
+class ProcessThread : public TThread
+{
+private:
+	TEvent* MyEvent;
+	DWORD bufferSize; // DWORD - 32-битное беззнаковое целое. Аналоги: unsigned long int, UINT.
+	class TForm1* Form1;
+
+	char* copyBuffer; // для работы с данными необходимо их скопировать
+	ClusterSignature clusterSignature;  // определеяем сигнатуру кластера
+	bool useSignatureSearch; // нужно ли искать сигнатуры?
+
+	// функция по добавлению кластера в БД
+	bool addClusterToDB();
+protected:
+	void __fastcall Execute();
+public:
+	__fastcall ProcessThread(bool CreateSuspended, TEvent* MyEvent, DWORD bufferSize, TForm1* Form1, bool useSignatureSearch);
+	void __fastcall addClustersToVST();  // по завершению вывод информации в VirtualStringTree
+
+	char* receivedBuffer; // для БД
+    DWORD clusterNumber;
+};
+//---------------------------------------------------------------------------
+#endif
