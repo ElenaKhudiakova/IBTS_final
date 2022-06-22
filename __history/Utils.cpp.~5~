@@ -1,0 +1,58 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "Utils.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+HANDLE CreateDeviceHandle(UnicodeString path) {
+	wchar_t deviceName[20];
+	// Копируем из path только первый символ
+	swprintf(deviceName, L"\\\\.\\%c:", path.w_str()[0]);
+
+	// Создаём handle для диска
+	HANDLE fileHandle = CreateFileW(
+		deviceName,
+		GENERIC_READ,
+		FILE_SHARE_READ | FILE_SHARE_WRITE,
+		NULL,
+		OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+	);
+	return fileHandle;
+}
+
+bool CreateFilePointer(HANDLE FileHandle, UINT64 offset) {
+	// Позиционируемся в файле
+	LARGE_INTEGER sectorOffset;
+	// Смещение от начала кластера
+	sectorOffset.QuadPart = offset;
+
+	// Задаём позицию
+	DWORD currentPosition = SetFilePointer(
+		FileHandle,
+		sectorOffset.LowPart,
+		&sectorOffset.HighPart,
+		FILE_BEGIN
+	);
+
+ 	return currentPosition == sectorOffset.LowPart;
+}
+
+bool ReadData(HANDLE FileHandle, char* dataBuffer, DWORD bytesToRead) {
+	DWORD bytesRead; 	    	// Сколько байтов удалось считать
+
+	// Чтение данных
+	bool readResult = ReadFile(
+		FileHandle,
+		dataBuffer,
+		bytesToRead,
+		&bytesRead,
+		NULL
+	);
+
+	// Возвращаем true, если всё удачно прочитали
+	return readResult && bytesRead == bytesToRead;
+}

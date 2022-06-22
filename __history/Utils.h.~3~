@@ -1,0 +1,9 @@
+//---------------------------------------------------------------------------
+
+#ifndef UtilsH
+#define UtilsH
+//---------------------------------------------------------------------------
+HANDLE CreateDeviceHandle(UnicodeString path);
+bool CreateFilePointer(HANDLE FileHandle, UINT64 offset);
+bool ReadData(HANDLE FileHandle, char* dataBuffer, DWORD bytesToRead);
+#endif
